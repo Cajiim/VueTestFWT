@@ -1,0 +1,58 @@
+<!-- eslint-disable vue/valid-v-on -->
+<template>
+  <button type="button" class="button" key="{el}">{el}</button>
+</template>
+
+<script setup lang="ts"></script>
+
+<style lang="scss">
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 41px;
+  background: inherit;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  border-right: none;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+
+  &:hover {
+    background: #ededed;
+  }
+  &_active {
+    background: black;
+    color: white;
+    border-color: black;
+    &:hover {
+      cursor: pointer;
+      background: black;
+      color: white;
+      border-color: black;
+    }
+  }
+  &_dark {
+    border: 1px solid #ffffff;
+    color: white;
+    border-right: none;
+    &:hover {
+      background: #464646;
+    }
+  }
+  &_activeDark {
+    background: white;
+    color: black;
+    border-color: white;
+    &:hover {
+      cursor: pointer;
+      background: white;
+      color: black;
+      border-color: white;
+    }
+  }
+}</style>
