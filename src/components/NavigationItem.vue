@@ -1,54 +1,32 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import type { Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import InputItem from './UI/InputItem.vue';
 import SelectItem from './UI/SelectItem.vue';
 import RangeItem from './UI/RangeItem.vue';
 
-type TAuthor = {
-  id: number;
-  name: string;
-};
-
-type TLocation = {
-  id: number;
-  location: string;
-};
-
-type TData = {
-  value?: { authors?: TAuthor[]; locations?: TLocation[] };
-};
-
-type TTestData = {
-  data?: {
-    value?: TData[];
-  };
-};
+const store = useStore();
 const route = useRoute();
-const valueInput = ref(route.query.q || '');
+const valueInput = ref((String(route.query.q) !== 'undefined' ? String(route.query.q) : ''));
 const Author = ref('Author');
 const Location = ref('Location');
-const loading = ref(true);
-const data: Ref<TData> = ref([]);
-const store = useStore();
+const data = computed(() => store.state.selects);
 const fetchAuthors = () => store.dispatch('selects/fetchAuthors');
 const fetchLocations = () => store.dispatch('selects/fetchLocations');
-onMounted(async () => {
-  loading.value = true;
-  await fetchAuthors();
-  await fetchLocations();
-  data.value = computed<TTestData>(() => store.state.selects);
-  loading.value = false;
+
+onMounted(() => {
+  fetchAuthors();
+  fetchLocations();
 });
+
 </script>
 
 <template>
   <nav class="navigation">
     <InputItem class="inputName" v-model="valueInput" />
-    <SelectItem :value="Author" :data="data.value?.authors" :loading="loading" />
-    <SelectItem :value="Location" :data="data.value?.locations" :loading="loading" />
+    <SelectItem :value="Author" :data="data.authors" />
+    <SelectItem :value="Location" :data="data.locations" />
     <RangeItem />
   </nav>
 </template>

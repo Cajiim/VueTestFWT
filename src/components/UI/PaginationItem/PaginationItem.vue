@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  ref, watchEffect, computed, Ref,
+  ref, watchEffect, computed,
 } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
@@ -15,7 +15,7 @@ import ActivePagination from './ActivePagination.vue';
 const store = useStore();
 const isLoading = ref(false);
 const limit = ref(9);
-const totalCount: number | Ref<number> = ref(33);
+const totalCount = computed((): number => store.state.paintings.totalCount);
 const amount = ref(1);
 const [currentPage, setCurrentPage] = useState(1);
 const route = useRoute();
@@ -24,8 +24,7 @@ const onChange = (number: number) => {
 };
 
 watchEffect(() => {
-  totalCount.value = computed((): number => store.state.paintings.totalCount);
-  amount.value = Math.ceil(Number(totalCount.value.value) / limit.value);
+  amount.value = Math.ceil((totalCount.value / limit.value));
 });
 
 watchEffect(() => {

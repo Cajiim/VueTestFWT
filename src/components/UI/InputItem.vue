@@ -3,41 +3,26 @@
   <input :value="modelValue" type="text" @input="updateInput" class="inputName" />
 </template>
 
-<script lang="ts">
-import { LooseRequired } from '@vue/shared';
-import { ExtractPropTypes, SetupContext } from 'vue';
+<script setup lang="ts">
+import { defineEmits, defineProps, toRefs } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-export default {
-  emits: ['update:modelValue'],
-  setup(
-    _props: Readonly<
-      LooseRequired<
-        Readonly<
-          ExtractPropTypes<{
-            modelValue: StringConstructor[];
-          }>
-        > & { 'onUpdate:modelValue'?: ((...args: (string | number)[]) => void) | undefined }
-      >
-    >,
-    context: SetupContext<'update:modelValue'[]>,
-  ) {
-    const route = useRoute();
-    const router = useRouter();
-    const updateInput = (e: Event) => {
-      const query = { ...route.query };
-      context.emit('update:modelValue', (e.target as HTMLInputElement).value);
-      router.replace({ query: { ...route.query, q: (e.target as HTMLInputElement).value.trim() } });
-      if (!(e.target as HTMLInputElement).value.trim()) {
-        delete query.q;
-        router.replace({ query });
-      }
-    };
-    return { updateInput };
-  },
-  props: {
-    modelValue: String,
-  },
+const emit = defineEmits(['update:modelValue']);
+const props = defineProps({
+  modelValue: String,
+});
+const { modelValue } = toRefs(props);
+
+const route = useRoute();
+const router = useRouter();
+const updateInput = (e: Event) => {
+  const query = { ...route.query };
+  emit('update:modelValue', (e.target as HTMLInputElement).value);
+  router.replace({ query: { ...route.query, q: (e.target as HTMLInputElement).value.trim() } });
+  if (!(e.target as HTMLInputElement).value.trim()) {
+    delete query.q;
+    router.replace({ query });
+  }
 };
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 import PaintingCard from './PaintingCard.vue';
 
@@ -20,21 +20,15 @@ export type TCard = {
 }
 };
 
-const data = ref<TCard>({});
-const loading = ref(true);
 const store = useStore();
-
-onMounted(async () => {
-  loading.value = true;
-  data.value = computed(() : TCard => store.state.paintings);
-  loading.value = false;
-});
+const isLoading = computed(() => store.state.paintings.isLoading);
+const data = computed(() => store.state.paintings);
 
 </script>
 
 <template>
-  <ul class="content" v-if="!loading">
-    <li class="painting" v-for="painting in data.value?.paintings" :key="painting?.id">
+  <ul class="content" v-if="!isLoading">
+    <li class="painting" v-for="painting in data?.paintings" :key="painting?.id">
     <PaintingCard :card='painting'/>
     </li>
   </ul>

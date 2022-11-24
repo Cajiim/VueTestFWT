@@ -41,29 +41,27 @@ const props = defineProps({
     default: '',
   },
 });
-const { data, loading, value } = toRefs(props);
+const { data, value } = toRefs(props);
 const open = () => {
   isOpen.value = false;
 };
 
 onClickOutside(selectRef, open);
 
+const store = useStore();
 const route = useRoute();
 const router = useRouter();
-const fetchAuthors = ref([]);
-const fetchLocations = ref([]);
-const store = useStore();
+const fetchAuthors = computed(() => store.state.selects.authors);
+const fetchLocations = computed(() => store.state.selects.locations);
 const correctValue = ref('');
 
 watchEffect(() => {
-  fetchAuthors.value = computed(() => store.state.selects.authors);
-  fetchLocations.value = computed(() => store.state.selects.locations);
   const getItems = () => {
     const author = ref('Author');
     const location = ref('Location');
-    fetchAuthors.value.value.find((el: { id: number; name: string }) =>
+    fetchAuthors.value.find((el: { id: number; name: string }) =>
       (el.id === Number(route.query.author) ? (author.value = el.name) : ''));
-    fetchLocations.value.value.find((el: { id: number; location: string }) =>
+    fetchLocations.value.find((el: { id: number; location: string }) =>
       (el.id === Number(route.query.location) ? (location.value = el.location) : ''));
     return { author, location };
   };
@@ -110,7 +108,7 @@ const handlClickClear = (e: { stopPropagation: () => void; }) => {
     <ul
       class="select__list"
       :class="{ select__list_open: isOpen }"
-      v-if="isOpen && loading === false"
+      v-if="isOpen"
     >
       <li
         class="select__items"
