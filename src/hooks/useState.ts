@@ -1,8 +1,8 @@
 import { readonly, ref } from 'vue';
 
-const useState = (initialState) => {
+const useState = (initialState: any) => {
   const state = ref(initialState);
-  const setState = (newState) => {
+  const setState = (newState: any) => {
     state.value = newState;
   };
 

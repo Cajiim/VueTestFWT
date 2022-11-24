@@ -1,9 +1,52 @@
-<!-- eslint-disable vue/valid-v-on -->
 <template>
-  <button type="button" class="button" key="{el}">{el}</button>
+  <button
+    v-for="page in pageNumbers()"
+    :key="page"
+    type="button"
+    class="button"
+    :class="{ button_active: page === currentPage }"
+    @click="onChange(page)"
+  >
+    {{ page }}
+  </button>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { defineProps, toRefs, ref } from 'vue';
+
+const props = defineProps({
+  onChange: {
+    type: Function,
+    default: () => ({ page: 1 }),
+  },
+  currentPage: {
+    Number,
+    default: 1,
+  },
+  amount: {
+    Number,
+    default: 1,
+  },
+  isLoading: {
+    Boolean,
+    default: false,
+  },
+});
+
+const { onChange, currentPage, amount } = toRefs(props);
+
+const start = ref(1);
+const end = ref(1);
+const amountPage = () => Array.from({ length: amount.value }, (_, i) => i + 1);
+const pageNumbers = () => {
+  if (currentPage.value <= 1) return amountPage().slice(0, 3);
+  if (currentPage.value >= amountPage.length) return amountPage().slice(-3);
+  start.value = currentPage.value <= 2 ? 0 : currentPage.value - 2;
+  end.value = currentPage.value >= amountPage.length - 1
+    ? amountPage.length : currentPage.value + 1;
+  return amountPage().slice(start.value, end.value);
+};
+</script>
 
 <style lang="scss">
 .button {
@@ -55,4 +98,5 @@
       border-color: white;
     }
   }
-}</style>
+}
+</style>

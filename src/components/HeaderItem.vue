@@ -5,15 +5,10 @@
   </header>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import LogoIcon from '../data/FwtLogo.vue';
 import ThemeIcon from '../data/ThemeIcon.vue';
 
-export default {
-  components: {
-    LogoIcon, ThemeIcon,
-  },
-};
 </script>
 
 <style lang="scss">

@@ -1,25 +1,53 @@
 <!-- eslint-disable vuejs-accessibility/form-control-has-label -->
 <template>
-    <div class="rangeChild">
-      <input
-        placeholder="from"
-        class='rangeChild__input'
-        value=""
-        type="number"
-      />
-      <span
-        class='rangeChild__line'></span>
-      <input
-        placeholder="before"
-        class='rangeChild__input'
-        value=""
-        type="number"
-      />
-    </div>
+  <div class="rangeChild">
+    <input
+      placeholder="from"
+      class="rangeChild__input"
+      v-model="valueBefore"
+      @input="updateInputBefore"
+      type="number"
+    />
+    <span class="rangeChild__line"></span>
+    <input
+    placeholder="before"
+    class="rangeChild__input"
+    v-model="valueAfter"
+    type="number"
+    @input="updateInputAfter"/>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
+const router = useRouter();
+const valueBefore = ref(route.query.gte || '');
+const valueAfter = ref(route.query.lte || '');
+
+const updateInputBefore = (e: Event) => {
+  const query = { ...route.query };
+  router.replace({
+    query: { ...route.query, gte: (e.target as HTMLInputElement).value.trim() },
+  });
+  if (!(e.target as HTMLInputElement).value.trim()) {
+    delete query.gte;
+    router.replace({ query });
+  }
+};
+
+const updateInputAfter = (e: Event) => {
+  const query = { ...route.query };
+  router.replace({
+    query: { ...route.query, lte: (e.target as HTMLInputElement).value.trim() },
+  });
+  if (!(e.target as HTMLInputElement).value.trim()) {
+    delete query.lte;
+    router.replace({ query });
+  }
+};
 </script>
 
 <style lang="scss">
@@ -30,6 +58,7 @@
   @media screen and (max-width: 1365px) {
     flex-direction: column;
     max-width: 110px;
+    margin-bottom: 20px !important;
   }
   @media screen and (max-width: 767px) {
     max-width: 100%;
@@ -42,7 +71,7 @@
     background: #efefef;
     border-radius: 8px;
     border: 0;
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-style: normal;
     font-weight: 400;
     font-size: 13px;
@@ -85,15 +114,14 @@
   }
 }
 
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
-input[type='number'],
-input[type='number']:hover,
-input[type='number']:focus {
+input[type="number"],
+input[type="number"]:hover,
+input[type="number"]:focus {
   appearance: none;
   -moz-appearance: textfield;
 }
-
 </style>

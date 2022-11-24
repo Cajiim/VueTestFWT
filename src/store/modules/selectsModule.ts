@@ -38,7 +38,7 @@ const selectsModule = {
   actions: {
     async fetchAuthors({ commit } : { commit:Commit}) {
       try {
-        const response = await axios.get('https://test-front.framework.team/authors');
+        const response = await axios.get('https://test-front.framework.team/authors', { params: { _sort: 'name' } });
         commit('setAuthors', response.data);
       } catch (error) {
         commit('setError', error);
@@ -47,7 +47,7 @@ const selectsModule = {
 
     async fetchLocations({ commit } : { commit:Commit}) {
       try {
-        const response = await axios.get('https://test-front.framework.team/locations');
+        const response = await axios.get('https://test-front.framework.team/locations', { params: { _sort: 'location' } });
         commit('setLocations', response.data);
       } catch (error) {
         commit('setError', error);

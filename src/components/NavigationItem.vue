@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import {
-  onMounted,
-  ref,
-  computed,
-  reactive,
-  onBeforeMount,
-  onUnmounted,
-  watchEffect,
-  ComputedRef,
-} from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import type { Ref } from 'vue';
+import { useRoute } from 'vue-router';
 import InputItem from './UI/InputItem.vue';
 import SelectItem from './UI/SelectItem.vue';
 import RangeItem from './UI/RangeItem.vue';
@@ -32,12 +24,14 @@ type TData = {
 type TTestData = {
   data?: {
     value?: TData[];
-  }
-}
-
-const valueInput = ref('');
+  };
+};
+const route = useRoute();
+const valueInput = ref(route.query.q || '');
+const Author = ref('Author');
+const Location = ref('Location');
 const loading = ref(true);
-const data: Ref<TData> = ref({});
+const data: Ref<TData> = ref([]);
 const store = useStore();
 const fetchAuthors = () => store.dispatch('selects/fetchAuthors');
 const fetchLocations = () => store.dispatch('selects/fetchLocations');
@@ -53,8 +47,8 @@ onMounted(async () => {
 <template>
   <nav class="navigation">
     <InputItem class="inputName" v-model="valueInput" />
-    <SelectItem value="Author" :data="data.value?.authors" :loading="loading" />
-    <SelectItem value="Location" :data="data.value?.locations" :loading="loading" />
+    <SelectItem :value="Author" :data="data.value?.authors" :loading="loading" />
+    <SelectItem :value="Location" :data="data.value?.locations" :loading="loading" />
     <RangeItem />
   </nav>
 </template>

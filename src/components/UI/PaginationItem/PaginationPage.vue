@@ -1,21 +1,18 @@
-<!-- eslint-disable vue/valid-v-on -->
 <template>
-    <button
-      class="paginationPage"
-      disabled
-      @click=''>
-      <component :is='child'/>
-    </button>
+  <button class="paginationPage" disabled>
+    <component :is="child" />
+  </button>
 </template>
 
 <script setup lang="ts">
-import { defineProps, toRefs, VueElement } from 'vue';
+import { defineProps, toRefs } from 'vue';
+import type { Component } from 'vue';
 
-const props = defineProps(
-  {
-    child: VueElement,
-  },
-);
+type TChild = {
+  child: Component;
+};
+
+const props = defineProps<TChild>();
 const { child } = toRefs(props);
 </script>
 

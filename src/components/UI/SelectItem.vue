@@ -1,43 +1,129 @@
+<!-- eslint-disable implicit-arrow-linebreak -->
+<!-- eslint-disable eqeqeq -->
+<!-- eslint-disable no-return-assign -->
+<script setup lang="ts">
+import { useStore } from 'vuex';
+import {
+  ref, toRefs, defineProps, PropType, computed, watchEffect,
+} from 'vue';
+import { onClickOutside } from '@vueuse/core';
+import { useRoute, useRouter } from 'vue-router';
+import ArrowItem from '../../data/ArrowItem.vue';
+import ClearSelect from '../../data/ClearSelect.vue';
+
+type TItem = { id: number;
+    name: string;
+    location: string;}
+
+type TData = {
+  [x: string]: TItem;
+  item: {
+    id: number;
+    name: string;
+    location: string;
+  };
+};
+
+const isOpen = ref(false);
+const isVisible = ref(false);
+const selectRef = ref<HTMLDivElement | null>(null);
+const props = defineProps({
+  data: {
+    type: Object as PropType<TData>,
+    default: () => ({}),
+  },
+  loading: {
+    String,
+    default: true,
+  },
+  value: {
+    String,
+    default: '',
+  },
+});
+const { data, loading, value } = toRefs(props);
+const open = () => {
+  isOpen.value = false;
+};
+
+onClickOutside(selectRef, open);
+
+const route = useRoute();
+const router = useRouter();
+const fetchAuthors = ref([]);
+const fetchLocations = ref([]);
+const store = useStore();
+const correctValue = ref('');
+
+watchEffect(() => {
+  fetchAuthors.value = computed(() => store.state.selects.authors);
+  fetchLocations.value = computed(() => store.state.selects.locations);
+  const getItems = () => {
+    const author = ref('Author');
+    const location = ref('Location');
+    fetchAuthors.value.value.find((el: { id: number; name: string }) =>
+      (el.id === Number(route.query.author) ? (author.value = el.name) : ''));
+    fetchLocations.value.value.find((el: { id: number; location: string }) =>
+      (el.id === Number(route.query.location) ? (location.value = el.location) : ''));
+    return { author, location };
+  };
+  correctValue.value = value.value === 'Author' ? getItems().author.value : getItems().location.value;
+  isVisible.value = correctValue.value !== 'Author' && correctValue.value !== 'Location';
+});
+
+const handlClickItem = (item: { name: string; location: string; id: number }) => {
+  if (item.name) {
+    router.replace({ query: { ...route.query, author: item.id } });
+  }
+  if (item.location) {
+    router.replace({ query: { ...route.query, location: item.id } });
+  }
+};
+
+const handlClickClear = (e: { stopPropagation: () => void; }) => {
+  const query = { ...route.query };
+  e.stopPropagation();
+  if (value.value === 'Author') {
+    delete query.author;
+    router.replace({ query });
+  } else {
+    delete query.location;
+    router.replace({ query });
+  }
+};
+
+</script>
+
 <template>
-  <div ref="ref" class="select" @click="isOpen = !isOpen" aria-hidden>
-    <span class="select__name"></span>
-    <ClearSelect />
+  <div
+    ref="selectRef"
+    class="select"
+    @click="isOpen = !isOpen"
+    aria-hidden
+    :class="{ select_open: isOpen }"
+  >
+    <span class="select__name">{{ correctValue }}</span>
+    <ClearSelect
+    :isVisible='isVisible'
+    @click='handlClickClear'/>
     <ArrowItem class="select__dropDown" :isOpen="isOpen" />
-    <ul class="select__list" v-if="isOpen && loading === false">
+    <ul
+      class="select__list"
+      :class="{ select__list_open: isOpen }"
+      v-if="isOpen && loading === false"
+    >
       <li
         class="select__items"
         v-for="item in data"
         :key="item.id"
         aria-hidden
+        @click="() => handlClickItem(item)"
       >
         <p class="select__itemsName">{{ item.name || item.location }}</p>
       </li>
     </ul>
   </div>
 </template>
-
-<script setup lang="ts">
-import {
-  ref, toRefs, defineProps,
-} from 'vue';
-import ArrowItem from '../../data/ArrowItem.vue';
-import ClearSelect from '../../data/ClearSelect.vue';
-
-const props = defineProps(
-  {
-    data: {
-      Array,
-      default: [],
-    },
-    loading: {
-      String,
-      default: true,
-    },
-  },
-);
-const isOpen = ref(false);
-const { data, loading } = toRefs(props);
-</script>
 
 <style lang="scss" scoped>
 .select {
@@ -116,6 +202,7 @@ const { data, loading } = toRefs(props);
     font-size: 16px;
     line-height: 20px;
     overflow: overlay;
+    max-height: 300px;
 
     &_open {
       border-radius: 0 0 8px 8px;

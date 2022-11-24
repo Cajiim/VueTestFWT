@@ -23,13 +23,11 @@ export type TCard = {
 const data = ref<TCard>({});
 const loading = ref(true);
 const store = useStore();
-const fetchPaintings = () => store.dispatch('paintings/fetchPaintings');
+
 onMounted(async () => {
   loading.value = true;
-  await fetchPaintings();
   data.value = computed(() : TCard => store.state.paintings);
   loading.value = false;
-  console.log(data.value);
 });
 
 </script>

@@ -9,10 +9,8 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  props: {},
-};
+<script setup lang="ts">
+
 </script>
 
 <style lang="scss" scoped></style>

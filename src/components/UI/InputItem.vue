@@ -6,6 +6,7 @@
 <script lang="ts">
 import { LooseRequired } from '@vue/shared';
 import { ExtractPropTypes, SetupContext } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
   emits: ['update:modelValue'],
@@ -21,13 +22,21 @@ export default {
     >,
     context: SetupContext<'update:modelValue'[]>,
   ) {
+    const route = useRoute();
+    const router = useRouter();
     const updateInput = (e: Event) => {
+      const query = { ...route.query };
       context.emit('update:modelValue', (e.target as HTMLInputElement).value);
+      router.replace({ query: { ...route.query, q: (e.target as HTMLInputElement).value.trim() } });
+      if (!(e.target as HTMLInputElement).value.trim()) {
+        delete query.q;
+        router.replace({ query });
+      }
     };
     return { updateInput };
   },
   props: {
-    modelValue: [String],
+    modelValue: String,
   },
 };
 </script>

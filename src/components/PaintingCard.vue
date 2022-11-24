@@ -22,12 +22,21 @@
 <script setup lang="ts">
 import { toRefs, defineProps } from 'vue';
 
-const props = defineProps({
-  card: {
-    Array,
-    default: [],
-  },
-});
+type TCard = {
+  card:{
+    imageUrl: string;
+    name: string;
+    author:{
+      name: string;
+    }
+    created: string;
+    location:{
+      location: string;
+    }
+  }
+}
+
+const props = defineProps<TCard>();
 const { card } = toRefs(props);
 </script>
 
