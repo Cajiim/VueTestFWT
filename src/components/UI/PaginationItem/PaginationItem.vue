@@ -14,7 +14,7 @@ import ActivePagination from './ActivePagination.vue';
 
 const store = useStore();
 const isLoading = ref(false);
-const limit = ref(9);
+const limit = ref(12);
 const totalCount = computed((): number => store.state.paintings.totalCount);
 const amount = ref(1);
 const [currentPage, setCurrentPage] = useState(1);
