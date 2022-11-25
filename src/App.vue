@@ -1,4 +1,3 @@
-<!-- eslint-disable jsx-a11y/label-has-for -->
 <template>
     <router-view></router-view>
 </template>

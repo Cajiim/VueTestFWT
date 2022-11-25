@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import PaintingCard from './PaintingCard.vue';
+import LoaderItem from './LoaderItem.vue';
 
 export type TCard = {
   data?: {
@@ -27,6 +28,7 @@ const data = computed(() => store.state.paintings);
 </script>
 
 <template>
+  <LoaderItem v-if='isLoading'/>
   <ul class="content" v-if="!isLoading">
     <li class="painting" v-for="painting in data?.paintings" :key="painting?.id">
     <PaintingCard :card='painting'/>

@@ -1,4 +1,3 @@
-<!-- eslint-disable jsx-a11y/label-has-for -->
 <template>
   <div className="home-wrapper">
     <header className="home-wrapper__header">

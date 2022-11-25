@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable no-underscore-dangle */
 import axios from 'axios';
 import type { Commit } from 'vuex';
 

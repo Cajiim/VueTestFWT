@@ -1,4 +1,3 @@
-<!-- eslint-disable vuejs-accessibility/form-control-has-label -->
 <template>
   <input :value="modelValue" type="text" @input="updateInput" class="inputName" />
 </template>

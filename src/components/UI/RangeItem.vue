@@ -1,11 +1,19 @@
 <template>
-  <div ref="ref" class="range" :class='{range_open : isOpen}' aria-hidden @click="isOpen = !isOpen">
+  <div
+    ref="rangeRef"
+    class="range"
+    :class="{ range_open: isOpen }"
+    aria-hidden
+    @click="isOpen = !isOpen"
+  >
     <span class="range__title">Created</span>
     <ArrowItemVue class="range__arrow" :isOpen="isOpen" />
-    <div class="range__сontainer"
+    <div
+      class="range__сontainer"
       aria-hidden="true"
       @click.stop="(e) => e.preventDefault()"
-      v-if="isOpen">
+      v-if="isOpen"
+    >
       <RangeChildrenItemVue
         valueFilterFrom="valueFilterFrom"
         valueFilterBefore="valueFilterBefore"
@@ -16,11 +24,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 import ArrowItemVue from '../../data/ArrowItem.vue';
 import RangeChildrenItemVue from './RangeChildrenItem.vue';
 
+const rangeRef = ref<HTMLDivElement | null>(null);
 const isOpen = ref(false);
+const open = () => {
+  isOpen.value = false;
+};
 
+onClickOutside(rangeRef, open);
 </script>
 
 <style lang="scss">

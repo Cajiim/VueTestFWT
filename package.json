@@ -61,7 +61,13 @@
             "{}": false
           }
         }
-      ]
+      ],
+      "camelcase": "off",
+      "no-underscore-dangle": 0,
+      "no-return-assign": 0,
+      "implicit-arrow-linebreak": 0,
+      "no-trailing-spaces": 0,
+      "vuejs-accessibility/form-control-has-label": 0
     }
   },
   "browserslist": [

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import {
-  ref, watchEffect, computed,
-} from 'vue';
+import { ref, watchEffect, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import useState from '../../../hooks/useState';
@@ -38,12 +36,12 @@ watchEffect(() => {
     <PaginationPage
       :child="DoubleArrowLeft"
       :disabled="currentPage < 2"
-      @click="() => onChange(1)"
+      @click="onChange(1)"
     />
     <PaginationPage
       :child="ArrowLeft"
       :disabled="currentPage === 1"
-      @click="() => onChange(currentPage - 1)"
+      @click="onChange(currentPage - 1)"
     />
     <ActivePagination
       :onChange="onChange"
@@ -54,12 +52,12 @@ watchEffect(() => {
     <PaginationPage
       :child="ArrowRight"
       :disabled="currentPage >= amount"
-      @click="() => onChange(currentPage + 1)"
+      @click="onChange(currentPage + 1)"
     />
     <PaginationPage
       :child="DoubleArrowRight"
       :disabled="currentPage >= amount"
-      @click="() => onChange(amount)"
+      @click="onChange(amount)"
     />
   </div>
 </template>

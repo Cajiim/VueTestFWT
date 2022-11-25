@@ -1,6 +1,3 @@
-<!-- eslint-disable implicit-arrow-linebreak -->
-<!-- eslint-disable eqeqeq -->
-<!-- eslint-disable no-return-assign -->
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import {
@@ -11,9 +8,7 @@ import { useRoute, useRouter } from 'vue-router';
 import ArrowItem from '../../data/ArrowItem.vue';
 import ClearSelect from '../../data/ClearSelect.vue';
 
-type TItem = { id: number;
-    name: string;
-    location: string;}
+type TItem = { id: number; name: string; location: string };
 
 type TData = {
   [x: string]: TItem;
@@ -59,9 +54,9 @@ watchEffect(() => {
   const getItems = () => {
     const author = ref('Author');
     const location = ref('Location');
-    fetchAuthors.value.find((el: { id: number; name: string }) =>
+    fetchAuthors.value.find((el: { id: number; name: string }) => 
       (el.id === Number(route.query.author) ? (author.value = el.name) : ''));
-    fetchLocations.value.find((el: { id: number; location: string }) =>
+    fetchLocations.value.find((el: { id: number; location: string }) => 
       (el.id === Number(route.query.location) ? (location.value = el.location) : ''));
     return { author, location };
   };
@@ -78,7 +73,7 @@ const handlClickItem = (item: { name: string; location: string; id: number }) =>
   }
 };
 
-const handlClickClear = (e: { stopPropagation: () => void; }) => {
+const handlClickClear = (e: { stopPropagation: () => void }) => {
   const query = { ...route.query };
   e.stopPropagation();
   if (value.value === 'Author') {
@@ -89,7 +84,6 @@ const handlClickClear = (e: { stopPropagation: () => void; }) => {
     router.replace({ query });
   }
 };
-
 </script>
 
 <template>
@@ -101,15 +95,9 @@ const handlClickClear = (e: { stopPropagation: () => void; }) => {
     :class="{ select_open: isOpen }"
   >
     <span class="select__name">{{ correctValue }}</span>
-    <ClearSelect
-    :isVisible='isVisible'
-    @click='handlClickClear'/>
+    <ClearSelect :isVisible="isVisible" @click="handlClickClear" />
     <ArrowItem class="select__dropDown" :isOpen="isOpen" />
-    <ul
-      class="select__list"
-      :class="{ select__list_open: isOpen }"
-      v-if="isOpen"
-    >
+    <ul class="select__list" :class="{ select__list_open: isOpen }" v-if="isOpen">
       <li
         class="select__items"
         v-for="item in data"
