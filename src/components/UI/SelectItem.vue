@@ -288,5 +288,19 @@ const handlClickClear = (e: { stopPropagation: () => void }) => {
       white-space: nowrap;
     }
   }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #9c9c9c;
+    border-radius: 8px;
+    border: 1px solid inherit;
+  }
+  ::-webkit-scrollbar-track {
+    background: inherit;
+    border: 1px solid inherit;
+    position:absolute;
+  }
 }
 </style>
