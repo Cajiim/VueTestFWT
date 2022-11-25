@@ -1,5 +1,5 @@
 <template>
-  <button class="paginationPage" disabled>
+  <button class="paginationPage" :class="{paginationPage_dark : isDarkTheme}" disabled>
     <component :is="child" />
   </button>
 </template>
@@ -10,10 +10,11 @@ import type { Component } from 'vue';
 
 type TChild = {
   child: Component;
+  isDarkTheme: boolean;
 };
 
 const props = defineProps<TChild>();
-const { child } = toRefs(props);
+const { child, isDarkTheme } = toRefs(props);
 </script>
 
 <style lang="scss">

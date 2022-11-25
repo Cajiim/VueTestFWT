@@ -2,14 +2,19 @@
   <div
     ref="rangeRef"
     class="range"
-    :class="{ range_open: isOpen }"
+    :class="{
+      range_open: isOpen,
+      range_dark: isDarkTheme,
+      range_activeDark: isOpen && isDarkTheme,
+    }"
     aria-hidden
     @click="isOpen = !isOpen"
   >
-    <span class="range__title">Created</span>
-    <ArrowItemVue class="range__arrow" :isOpen="isOpen" />
+    <span class="range__title" :class="{range__title_dark : isDarkTheme}" >Created</span>
+    <ArrowItemVue class="range__arrow" :isDarkTheme="isDarkTheme" :isOpen="isOpen" />
     <div
       class="range__сontainer"
+      :class="{range__сontainer_dark : isDarkTheme}"
       aria-hidden="true"
       @click.stop="(e) => e.preventDefault()"
       v-if="isOpen"
@@ -17,17 +22,22 @@
       <RangeChildrenItemVue
         valueFilterFrom="valueFilterFrom"
         valueFilterBefore="valueFilterBefore"
+        :isDarkTheme="isDarkTheme"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps, toRefs } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import ArrowItemVue from '../../data/ArrowItem.vue';
 import RangeChildrenItemVue from './RangeChildrenItem.vue';
 
+const props = defineProps({
+  isDarkTheme: Boolean,
+});
+const { isDarkTheme } = toRefs(props);
 const rangeRef = ref<HTMLDivElement | null>(null);
 const isOpen = ref(false);
 const open = () => {

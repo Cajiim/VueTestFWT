@@ -4,7 +4,11 @@
     :key="page"
     type="button"
     class="button"
-    :class="{ button_active: page === currentPage }"
+    :class="{
+      button_active: page === currentPage,
+      button_dark: isDarkTheme,
+      button_activeDark: isDarkTheme && page === currentPage,
+    }"
     @click="onChange(page)"
   >
     {{ page }}
@@ -31,9 +35,15 @@ const props = defineProps({
     Boolean,
     default: false,
   },
+  isDarkTheme: {
+    Boolean,
+    default: false,
+  },
 });
 
-const { onChange, currentPage, amount } = toRefs(props);
+const {
+  onChange, currentPage, amount, isDarkTheme, 
+} = toRefs(props);
 
 const start = ref(1);
 const end = ref(1);
@@ -42,7 +52,7 @@ const pageNumbers = () => {
   if (currentPage.value <= 1) return amountPage().slice(0, 3);
   if (currentPage.value >= amountPage.length) return amountPage().slice(-3);
   start.value = currentPage.value <= 2 ? 0 : currentPage.value - 2;
-  end.value = currentPage.value >= amountPage.length - 1
+  end.value = currentPage.value >= amountPage.length - 1 
     ? amountPage.length : currentPage.value + 1;
   return amountPage().slice(start.value, end.value);
 };

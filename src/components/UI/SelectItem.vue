@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import {
-  ref, toRefs, defineProps, PropType, computed, watchEffect,
+  ref, toRefs, defineProps, PropType, computed, watchEffect, 
 } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useRoute, useRouter } from 'vue-router';
@@ -35,8 +35,12 @@ const props = defineProps({
     String,
     default: '',
   },
+  isDarkTheme: {
+    Boolean,
+    default: false,
+  },
 });
-const { data, value } = toRefs(props);
+const { data, value, isDarkTheme } = toRefs(props);
 const open = () => {
   isOpen.value = false;
 };
@@ -54,9 +58,9 @@ watchEffect(() => {
   const getItems = () => {
     const author = ref('Author');
     const location = ref('Location');
-    fetchAuthors.value.find((el: { id: number; name: string }) => 
+    fetchAuthors.value.find((el: { id: number; name: string }) =>
       (el.id === Number(route.query.author) ? (author.value = el.name) : ''));
-    fetchLocations.value.find((el: { id: number; location: string }) => 
+    fetchLocations.value.find((el: { id: number; location: string }) =>
       (el.id === Number(route.query.location) ? (location.value = el.location) : ''));
     return { author, location };
   };
@@ -92,20 +96,35 @@ const handlClickClear = (e: { stopPropagation: () => void }) => {
     class="select"
     @click="isOpen = !isOpen"
     aria-hidden
-    :class="{ select_open: isOpen }"
+    :class="{
+      select_open: isOpen,
+      select_dark: isDarkTheme,
+      select_openDark: isOpen && isDarkTheme,
+    }"
   >
     <span class="select__name">{{ correctValue }}</span>
-    <ClearSelect :isVisible="isVisible" @click="handlClickClear" />
-    <ArrowItem class="select__dropDown" :isOpen="isOpen" />
-    <ul class="select__list" :class="{ select__list_open: isOpen }" v-if="isOpen">
+    <ClearSelect :isVisible="isVisible" @click="handlClickClear" :isDarkTheme='isDarkTheme'/>
+    <ArrowItem
+      class="select__dropDown"
+      :isDarkTheme="isDarkTheme"
+      :isOpen="isOpen"
+    />
+    <ul
+      class="select__list"
+      :class="{ select__list_open: isOpen, select__list_dark: isDarkTheme }"
+      v-if="isOpen"
+    >
       <li
         class="select__items"
+        :class="{ select__items_dark: isDarkTheme }"
         v-for="item in data"
         :key="item.id"
         aria-hidden
         @click="() => handlClickItem(item)"
       >
-        <p class="select__itemsName">{{ item.name || item.location }}</p>
+        <p class="select__itemsName">
+          {{ item.name || item.location }}
+        </p>
       </li>
     </ul>
   </div>
@@ -134,7 +153,7 @@ const handlClickClear = (e: { stopPropagation: () => void }) => {
     border-radius: 8px 8px 0 0;
     box-shadow: 0px 0px 0px 1px black;
 
-    &_dark {
+    &Dark {
       box-shadow: 0px 0px 0px 1px #ffffff;
     }
   }
@@ -214,13 +233,8 @@ const handlClickClear = (e: { stopPropagation: () => void }) => {
     display: flex;
     right: 18px;
     float: right;
-    fill: rgba(0, 0, 0, 0.3);
     width: 10px;
     height: 6px;
-
-    &_dark {
-      fill: rgba(255, 255, 255, 0.3);
-    }
   }
 
   &__items {

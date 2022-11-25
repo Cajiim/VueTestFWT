@@ -1,5 +1,10 @@
 <template>
-  <input :value="modelValue" type="text" @input="updateInput" class="inputName" />
+  <input 
+    :value="modelValue" 
+    type="text" 
+    @input="updateInput" 
+    class="inputName"
+    :class='{ inputName_dark: isDarkTheme }' />
 </template>
 
 <script setup lang="ts">
@@ -9,19 +14,22 @@ import { useRoute, useRouter } from 'vue-router';
 const emit = defineEmits(['update:modelValue']);
 const props = defineProps({
   modelValue: String,
+  isDarkTheme: Boolean,
 });
-const { modelValue } = toRefs(props);
+const { modelValue, isDarkTheme } = toRefs(props);
 
 const route = useRoute();
 const router = useRouter();
 const updateInput = (e: Event) => {
   const query = { ...route.query };
   emit('update:modelValue', (e.target as HTMLInputElement).value);
-  router.replace({ query: { ...route.query, q: (e.target as HTMLInputElement).value.trim() } });
-  if (!(e.target as HTMLInputElement).value.trim()) {
-    delete query.q;
-    router.replace({ query });
-  }
+  setTimeout(() => {
+    router.replace({ query: { ...route.query, q: (e.target as HTMLInputElement).value.trim() } });
+    if (!(e.target as HTMLInputElement).value.trim()) {
+      delete query.q;
+      router.replace({ query });
+    }
+  }, 600);
 };
 </script>
 

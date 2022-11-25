@@ -1,42 +1,53 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineProps, toRefs } from 'vue';
 import { useStore } from 'vuex';
 import PaintingCard from './PaintingCard.vue';
 import LoaderItem from './LoaderItem.vue';
 
 export type TCard = {
   data?: {
-  value?: {
-    author?: {
+    value?: {
+      author?: {
+        name?: string;
+      };
+      created?: string;
+      id?: number;
+      imageUrl?: string;
+      location?: {
+        location?: string;
+      };
       name?: string;
     };
-    created?: string;
-    id?: number;
-    imageUrl?: string;
-    location?: {
-      location?: string;
-    };
-    name?: string;
   };
-}
 };
+
+const props = defineProps({
+  isDarkTheme: Boolean,
+});
+const { isDarkTheme } = toRefs(props);
 
 const store = useStore();
 const isLoading = computed(() => store.state.paintings.isLoading);
 const data = computed(() => store.state.paintings);
-
 </script>
 
 <template>
-  <LoaderItem v-if='isLoading'/>
+  <LoaderItem v-if="isLoading" :isDarkTheme="isDarkTheme" />
   <ul class="content" v-if="!isLoading">
     <li class="painting" v-for="painting in data?.paintings" :key="painting?.id">
-    <PaintingCard :card='painting'/>
+      <PaintingCard :card="painting" />
     </li>
   </ul>
+  <p
+    class="content__error"
+    :class="{ content__error_dark: isDarkTheme }"
+    v-if="!isLoading && data?.paintings.length === 0"
+  >
+    По вашему запросу ничего не найдено
+  </p>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .content {
   margin: 45px 0 40px 0 !important;
   display: flex;
@@ -59,7 +70,7 @@ const data = computed(() => store.state.paintings);
   }
 }
 
-.painting{
+.painting {
   width: 360px;
   height: 275px;
   border-radius: 20px;

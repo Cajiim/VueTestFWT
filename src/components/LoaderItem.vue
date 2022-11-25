@@ -1,11 +1,15 @@
 <template>
      <div class="loader">
       <p
-        class='loader__text'>
+        class='loader__text'
+        :class="{loader__text_dark : isDarkTheme}"
+        >
         Loading...
       </p>
       <div
-        class='lds-roller'>
+        class='lds-roller'
+        :class="{'lds-roller_dark' : isDarkTheme}"
+        >
         <div></div>
         <div></div>
         <div></div>
@@ -19,7 +23,12 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps, toRefs } from 'vue';
 
+const props = defineProps({
+  isDarkTheme: Boolean,
+});
+const { isDarkTheme } = toRefs(props);
 </script>
 
 <style lang="scss">

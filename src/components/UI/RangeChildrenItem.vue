@@ -3,14 +3,16 @@
     <input
       placeholder="from"
       class="rangeChild__input"
+      :class="{rangeChild__input_dark : isDarkTheme}"
       v-model="valueBefore"
       @input="updateInputBefore"
       type="number"
     />
-    <span class="rangeChild__line"></span>
+    <span class="rangeChild__line" :class="{rangeChild__line_dark : isDarkTheme}"></span>
     <input
     placeholder="before"
     class="rangeChild__input"
+    :class="{rangeChild__input_dark : isDarkTheme}"
     v-model="valueAfter"
     type="number"
     @input="updateInputAfter"/>
@@ -18,8 +20,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps, toRefs } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
+const props = defineProps({
+  isDarkTheme: Boolean,
+});
+const { isDarkTheme } = toRefs(props);
 
 const route = useRoute();
 const router = useRouter();

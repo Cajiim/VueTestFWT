@@ -1,24 +1,39 @@
 <template>
   <div className="home-wrapper">
     <header className="home-wrapper__header">
-      <HeaderItem />
+      <HeaderItem :isDarkTheme='isDarkTheme' />
     </header>
     <main className="home-wrapper__main">
-      <NavigationItem />
-      <ContentItem />
-      <PaginationItem />
+      <NavigationItem :isDarkTheme='isDarkTheme' />
+      <ContentItem :isDarkTheme='isDarkTheme' />
+      <PaginationItem :isDarkTheme='isDarkTheme' />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, watchEffect } from 'vue';
+import { useStore } from 'vuex';
 import HeaderItem from '../components/HeaderItem.vue';
 import NavigationItem from '../components/NavigationItem.vue';
 import ContentItem from '../components/ContentItem.vue';
 import PaginationItem from '../components/UI/PaginationItem/PaginationItem.vue';
+import { getCookie } from '../helpers/coockie';
+
+const store = useStore();
+const isDarkTheme = computed(() => store.getters['theme/isDarkTheme']);
+watchEffect(() => {
+  const theme = (isDarkTheme.value || getCookie('theme') === 'true')
+    ? document.body.classList.add('darkTheme')
+    : document.body.classList.remove('darkTheme');
+  return () => theme;
+});
+watchEffect(() => 
+  ((isDarkTheme.value === false && getCookie('theme') === 'true') ? store.dispatch('theme/changeTheme') : ''));
+
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 * {
   margin: 0 !important;
   padding: 0 !important;
@@ -26,6 +41,10 @@ import PaginationItem from '../components/UI/PaginationItem/PaginationItem.vue';
 
 li {
   list-style: none;
+}
+
+.darkTheme {
+  background: #000000;
 }
 
 .home-wrapper {
